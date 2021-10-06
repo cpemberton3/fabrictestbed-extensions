@@ -122,6 +122,17 @@ class AbcTopologyEditor(ABC):
     def set_current_experiment(self, experiment):
         self.current_experiment = experiment
 
+    def nodeIsSubmitted(self, node):
+        #If the node has a reservation_id then it is submitted
+        try:
+            reservation_id = node.get_property(pname='reservation_info').reservation_id
+        except:
+            return False
+
+        return True
+
+
+
     def add_node(self, node_name):
         print("abc.add_node  node_name {}".format(node_name))
 
@@ -181,6 +192,9 @@ class AbcTopologyEditor(ABC):
 
         if experiment == None:
             experiment = self.current_experiment
+
+        if topology_node == None:
+            return
 
         try:
             #node = experiment['topology'].nodes[node_name]

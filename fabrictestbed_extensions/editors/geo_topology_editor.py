@@ -404,39 +404,6 @@ class GeoTopologyEditor(AbcTopologyEditor):
             except:
                 print("Skiping link: {}".format(link) )
 
-
-
-
-        #
-        # sites = []
-        # site_locations = []
-        # for site_name, site in self.advertised_topology.sites.items():
-        #     try:
-        #         site_locations.append(site.get_property("location").to_latlon())
-        #         sites.append(site)
-        #     except Exception as e:
-        #         print('Failed to add site: ' + str(site) + '. Error: ' + str(e))
-        #         # traceback.print_exc()
-        #
-        # paths = {}
-        # for i, site in enumerate(sites):
-        #     # site_locations.append(site.get_property("location").to_latlon())
-        #     path_locations = [sites[i].get_property("location").to_latlon(),
-        #                       sites[(i + 1) % len(sites)].get_property("location").to_latlon()]
-        #     ant_path = AntPath(
-        #         locations=path_locations,
-        #         dash_array=[1, 10],
-        #         delay=1000,
-        #         color='#7590ba',
-        #         pulse_color=self.FABRIC_PRIMARY,
-        #         paused=True,
-        #         hardwareAccelerated=True,
-        #         description='Task'
-        #     )
-        #
-        #     ant_path.on_click(functools.partial(self.ant_path, path_name=i))
-        #     self.available_resources_layer_group.add_layer(ant_path)
-
         # Update node Dashboard
         site_name_list = ['<Choose Site>'] + sorted(site_name_list)
         site_name_widget = widgets.Dropdown(
@@ -488,7 +455,7 @@ class GeoTopologyEditor(AbcTopologyEditor):
                                          layout=self.base_layout)
         dashboard['select_node_hbox'] = select_node_hbox
 
-        # Edit Node
+        # ----------------- Edit Node ------------------------
         # edit_header = HTML('<center><b>Edit Node</b></center>')
         edit_header = HTML('<center><b><hr></b><b>Edit Node</b></center>')
         dashboard['edit_header'] = edit_header
@@ -615,6 +582,152 @@ class GeoTopologyEditor(AbcTopologyEditor):
         node_edit_button_hbox = widgets.HBox([add_node_btn, delete_node_btn], layout=self.base_layout)
         dashboard['node_edit_button_hbox'] = node_edit_button_hbox
 
+        # ------------ Submitted  Info -----------
+
+        # Acitve Node Info
+        active_node_info_header = HTML('<center><b>Node Properties</b></center>')
+        dashboard['active_node_info_header'] = active_node_info_header
+
+        active_node_info_name_label = widgets.Label(value="Name: ",
+                                                      layout=Layout(width='80px',
+                                                                    min_height=self.base_min_height,
+                                                                    overflow_y=self.base_overflow_y))
+        active_node_info_name_value = widgets.Label(value="", layout=Layout(width='150px',
+                                                                              min_height=self.base_min_height,
+                                                                              overflow_y=self.base_overflow_y))
+        dashboard['active_node_info_name_value'] = active_node_info_name_value
+        active_node_info_name_widget_hbox = widgets.HBox([active_node_info_name_label,
+                                                            active_node_info_name_value])
+        dashboard['active_node_info_name_widget_hbox'] = active_node_info_name_widget_hbox
+
+        # active_node_info_cores_label
+        active_node_info_cores_label = widgets.Label(value="Cores: ",
+                                                      layout=Layout(width='80px',
+                                                                    min_height=self.base_min_height,
+                                                                    overflow_y=self.base_overflow_y))
+        active_node_info_cores_value = widgets.Label(value="", layout=Layout(width='150px',
+                                                                              min_height=self.base_min_height,
+                                                                              overflow_y=self.base_overflow_y))
+        dashboard['active_node_info_cores_value'] = active_node_info_cores_value
+
+        active_node_info_cores_widget_hbox = widgets.HBox([active_node_info_cores_label,
+                                                            active_node_info_cores_value])
+        dashboard['active_node_info_cores_widget_hbox'] = active_node_info_cores_widget_hbox
+
+        # active_node_info_ram_label
+        active_node_info_ram_label = widgets.Label(value="RAM: ",
+                                                      layout=Layout(width='80px',
+                                                                    min_height=self.base_min_height,
+                                                                    overflow_y=self.base_overflow_y))
+        active_node_info_ram_value = widgets.Label(value="", layout=Layout(width='150px',
+                                                                              min_height=self.base_min_height,
+                                                                              overflow_y=self.base_overflow_y))
+        dashboard['active_node_info_ram_value'] = active_node_info_ram_value
+
+        active_node_info_ram_widget_hbox = widgets.HBox([active_node_info_ram_label,
+                                                            active_node_info_ram_value])
+        dashboard['active_node_info_ram_widget_hbox'] = active_node_info_ram_widget_hbox
+
+        # active_node_info_disk_label
+        active_node_info_disk_label = widgets.Label(value="Disk: ",
+                                                      layout=Layout(width='80px',
+                                                                    min_height=self.base_min_height,
+                                                                    overflow_y=self.base_overflow_y))
+        active_node_info_disk_value = widgets.Label(value="", layout=Layout(width='150px',
+                                                                              min_height=self.base_min_height,
+                                                                              overflow_y=self.base_overflow_y))
+        dashboard['active_node_info_disk_value'] = active_node_info_disk_value
+
+        active_node_info_disk_widget_hbox = widgets.HBox([active_node_info_disk_label,
+                                                            active_node_info_disk_value])
+        dashboard['active_node_info_disk_widget_hbox'] = active_node_info_disk_widget_hbox
+
+        # active_node_info_image_label
+        active_node_info_image_label = widgets.Label(value="Image: ",
+                                                      layout=Layout(width='80px',
+                                                                    min_height=self.base_min_height,
+                                                                    overflow_y=self.base_overflow_y))
+        active_node_info_image_value = widgets.Label(value="", layout=Layout(width='150px',
+                                                                              min_height=self.base_min_height,
+                                                                              overflow_y=self.base_overflow_y))
+        dashboard['active_node_info_image_value'] = active_node_info_image_value
+
+        active_node_info_image_widget_hbox = widgets.HBox([active_node_info_image_label,
+                                                            active_node_info_image_value])
+        dashboard['active_node_info_image_widget_hbox'] = active_node_info_image_widget_hbox
+
+        # active_node_info_host_label
+        active_node_info_host_label = widgets.Label(value="Host: ",
+                                                      layout=Layout(width='80px',
+                                                                    min_height=self.base_min_height,
+                                                                    overflow_y=self.base_overflow_y))
+        active_node_info_host_value = widgets.Label(value="", layout=Layout(width='150px',
+                                                                              min_height=self.base_min_height,
+                                                                              overflow_y=self.base_overflow_y))
+        dashboard['active_node_info_host_value'] = active_node_info_host_value
+
+        active_node_info_host_widget_hbox = widgets.HBox([active_node_info_host_label,
+                                                            active_node_info_host_value])
+        dashboard['active_node_info_host_widget_hbox'] = active_node_info_host_widget_hbox
+
+        # active_node_info_site_label
+        active_node_info_site_label = widgets.Label(value="Site: ",
+                                                      layout=Layout(width='80px',
+                                                                    min_height=self.base_min_height,
+                                                                    overflow_y=self.base_overflow_y))
+        active_node_info_site_value = widgets.Label(value="", layout=Layout(width='150px',
+                                                                              min_height=self.base_min_height,
+                                                                              overflow_y=self.base_overflow_y))
+        dashboard['active_node_info_site_value'] = active_node_info_site_value
+
+        active_node_info_site_widget_hbox = widgets.HBox([active_node_info_site_label,
+                                                            active_node_info_site_value])
+        dashboard['active_node_info_site_widget_hbox'] = active_node_info_site_widget_hbox
+
+        # active_node_info_reservation_id_label
+        active_node_info_reservation_id_label = widgets.Label(value="Reservation ID: ",
+                                                      layout=Layout(width='80px',
+                                                                    min_height=self.base_min_height,
+                                                                    overflow_y=self.base_overflow_y))
+        active_node_info_reservation_id_value = widgets.Label(value="", layout=Layout(width='150px',
+                                                                              min_height=self.base_min_height,
+                                                                              overflow_y=self.base_overflow_y))
+        dashboard['active_node_info_reservation_id_value'] = active_node_info_reservation_id_value
+
+        active_node_info_reservation_id_widget_hbox = widgets.HBox([active_node_info_reservation_id_label,
+                                                            active_node_info_reservation_id_value])
+        dashboard['active_node_info_reservation_id_widget_hbox'] = active_node_info_reservation_id_widget_hbox
+
+        # active_node_info_reservation_state_label
+        active_node_info_reservation_state_label = widgets.Label(value="Reservation State: ",
+                                                      layout=Layout(width='80px',
+                                                                    min_height=self.base_min_height,
+                                                                    overflow_y=self.base_overflow_y))
+        active_node_info_reservation_state_value = widgets.Label(value="", layout=Layout(width='150px',
+                                                                              min_height=self.base_min_height,
+                                                                              overflow_y=self.base_overflow_y))
+        dashboard['active_node_info_reservation_state_value'] = active_node_info_reservation_state_value
+
+        active_node_info_reservation_state_widget_hbox = widgets.HBox([active_node_info_reservation_state_label,
+                                                            active_node_info_reservation_state_value])
+        dashboard['active_node_info_reservation_state_widget_hbox'] = active_node_info_reservation_state_widget_hbox
+
+        # active_node_info_management_ip_label
+        active_node_info_management_ip_label = widgets.Label(value="Management IP: ",
+                                                      layout=Layout(width='80px',
+                                                                    min_height=self.base_min_height,
+                                                                    overflow_y=self.base_overflow_y))
+        active_node_info_management_ip_value = widgets.Label(value="", layout=Layout(width='150px',
+                                                                              min_height=self.base_min_height,
+                                                                              overflow_y=self.base_overflow_y))
+        dashboard['active_node_info_management_ip_value'] = active_node_info_management_ip_value
+
+        active_node_info_management_ip_widget_hbox = widgets.HBox([active_node_info_management_ip_label,
+                                                            active_node_info_management_ip_value])
+        dashboard['active_node_info_management_ip_widget_hbox'] = active_node_info_management_ip_widget_hbox
+
+
+        # ------------- Add components -----------------
         component_header = HTML('<center><b><hr></b><b>Components</b></center>')
         dashboard['component_header'] = component_header
 
@@ -635,6 +748,9 @@ class GeoTopologyEditor(AbcTopologyEditor):
 
         self.build_node_dashboard_widget_list()
 
+
+
+
     def build_node_dashboard_widget_list(self):
         """
         Build node dashboard widget list
@@ -648,16 +764,33 @@ class GeoTopologyEditor(AbcTopologyEditor):
                                ]
 
         if dashboard['select_node_widget'].value != '<Choose Node>':
-            node_dashboard_list += [dashboard['edit_header'],
-                                    dashboard['node_name_hbox'],
-                                    dashboard['site_name_hbox'],
-                                    dashboard['core_slider_hbox'],
-                                    dashboard['ram_slider_hbox'],
-                                    dashboard['disk_slider_hbox'],
-                                    dashboard['image_widget_hbox'],
-                                    dashboard['component_header'],
-                                    dashboard['add_component_button_hbox'],
-                                    ]
+            if self.nodeIsSubmitted(self.current_node):
+                node_dashboard_list += [dashboard['active_node_info_header'],
+                                        dashboard['active_node_info_name_widget_hbox'],
+                                        dashboard['active_node_info_cores_widget_hbox'],
+                                        dashboard['active_node_info_ram_widget_hbox'],
+                                        dashboard['active_node_info_disk_widget_hbox'],
+                                        dashboard['active_node_info_image_widget_hbox'],
+                                        dashboard['active_node_info_host_widget_hbox'],
+                                        dashboard['active_node_info_site_widget_hbox'],
+                                        dashboard['active_node_info_reservation_id_widget_hbox'],
+                                        dashboard['active_node_info_reservation_state_widget_hbox'],
+                                        dashboard['active_node_info_management_ip_widget_hbox'],
+                                        dashboard['component_header'],
+                                        dashboard['add_component_button_hbox'],
+                                        ]
+
+            else:
+                node_dashboard_list += [dashboard['edit_header'],
+                                        dashboard['node_name_hbox'],
+                                        dashboard['site_name_hbox'],
+                                        dashboard['core_slider_hbox'],
+                                        dashboard['ram_slider_hbox'],
+                                        dashboard['disk_slider_hbox'],
+                                        dashboard['image_widget_hbox'],
+                                        dashboard['component_header'],
+                                        dashboard['add_component_button_hbox'],
+                                        ]
             for component_name, component in dashboard['component_widgets'].items():
                 print(component)
                 node_dashboard_list.append(component['component_header'])
@@ -1014,6 +1147,7 @@ class GeoTopologyEditor(AbcTopologyEditor):
             dashboard['node_name_widget'].value = node_name
             dashboard['select_node_widget'].observe(self.node_dashboard_select_node_event, names='value')
 
+            #Components
             component_header = HTML('<center><b><hr></b><b>Components</b></center>')
             dashboard['component_header'] = component_header
 
@@ -1053,22 +1187,7 @@ class GeoTopologyEditor(AbcTopologyEditor):
                                                     component_name_widget], layout=self.base_layout)
                 component_widget['component_name_hbox'] = component_name_hbox
 
-                # component_type_widget = widgets.Dropdown(
-                #     options=['<Any Type>'] + sorted(self.get_component_type_list()),
-                #     value='<Any Type>',
-                #     disabled=False,
-                #     ensure_option=True,
-                #     tooltip='Choose Component Type',
-                #     layout=self.base_layout
-                # )
-                # component_widget['component_type_widget'] = component_type_widget
-                # component_type_hbox = widgets.HBox([widgets.Label(value="Type: ",
-                #                                                   layout=Layout(width='70px',
-                #                                                                 min_height=self.base_min_height,
-                #                                                                 overflow_y=self.base_overflow_y)),
-                #                                     component_type_widget], layout=self.base_layout)
-                # component_widget['component_type_hbox'] = component_type_hbox
-
+                #Component List
                 component_model_widget = widgets.Dropdown(
                     options=['<Choose Component Model>'] + self.get_component_widget_options_list(),
                     value='<Choose Component Model>',
@@ -1133,7 +1252,18 @@ class GeoTopologyEditor(AbcTopologyEditor):
             print("geo.add_node: {}".format(node_name))
             super().add_node(node_name)
 
-            # Update the map markers/connections
+            # Add
+            #self.dashboards['node_dashboard']['active_node_info_name_value'].value = node_name
+            #self.dashboards['node_dashboard']['active_node_info_management_ip'].value = ""
+            #self.dashboards['node_dashboard']['active_node_info_cores_value'].value = ""
+            #self.dashboards['node_dashboard']['active_node_info_ram_value'].value = ""
+            #self.dashboards['node_dashboard']['active_node_info_disk_value'].value = ""
+            #self.dashboards['node_dashboard']['active_node_info_image_value'].value = ""
+            #self.dashboards['node_dashboard']['active_node_info_site_value'].value = ""
+            #self.dashboards['node_dashboard']['active_node_info_host_value'].value = ""
+            #self.dashboards['node_dashboard']['active_node_info_reservation_id_value'].value = ""
+            #self.dashboards['node_dashboard']['active_node_info_reservation_state_value'].value = ""
+
 
             # Update node dashboard values
             self.dashboards['node_dashboard']['node_name_widget'].value = node_name
@@ -1163,7 +1293,21 @@ class GeoTopologyEditor(AbcTopologyEditor):
             node = self.current_experiment['topology'].nodes[node_name]
             self.current_node = node
 
+            if self.nodeIsSubmitted(self.current_node):
+                #Set manifest info
+                self.dashboards['node_dashboard']['active_node_info_name_value'].value = node_name
+                self.dashboards['node_dashboard']['active_node_info_cores_value'].value = str(node.get_property(pname='capacity_allocations').core)
+                self.dashboards['node_dashboard']['active_node_info_ram_value'].value = str(node.get_property(pname='capacity_allocations').ram)
+                self.dashboards['node_dashboard']['active_node_info_disk_value'].value = str(node.get_property(pname='capacity_allocations').disk)
+                self.dashboards['node_dashboard']['active_node_info_image_value'].value = str(node.image_ref)
+                self.dashboards['node_dashboard']['active_node_info_site_value'].value = str(node.site)
+                self.dashboards['node_dashboard']['active_node_info_host_value'].value = str(node.get_property(pname='label_allocations').instance_parent)
+                self.dashboards['node_dashboard']['active_node_info_reservation_id_value'].value = str(node.get_property(pname='reservation_info').reservation_id)
+                self.dashboards['node_dashboard']['active_node_info_reservation_state_value'].value = str(node.get_property(pname='reservation_info').reservation_state)
+                self.dashboards['node_dashboard']['active_node_info_management_ip_value'].value = str(node.management_ip)
 
+
+            #set request info
             self.dashboards['node_dashboard']['node_name_widget'].value = node_name
             self.dashboards['node_dashboard']['site_name_widget'].value = node.get_property(pname='site')
             self.dashboards['node_dashboard']['core_slider'].value = int(self.get_capacity_value(node, 'core'))
