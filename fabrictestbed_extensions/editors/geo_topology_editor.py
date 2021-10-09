@@ -1107,6 +1107,19 @@ class GeoTopologyEditor(AbcTopologyEditor):
         self.set_dashboard('slice_dashboard')
         self.update_edit_slice_dashboard()
 
+    @staticmethod
+    def get_component_widget_options_list(type=None):
+        """
+        Get component widget options list
+        :param type:
+        :return:
+        """
+        return_list = []
+        for component in AbcTopologyEditor.get_component_model_list(type):
+            return_list.append((component['Model'] + " (" + component['Type'] + ")",component))
+
+        return return_list
+
     def rebuild_node_dashboard(self, node_name=None):
         """
         Rebuild Node dashboard
@@ -1180,6 +1193,8 @@ class GeoTopologyEditor(AbcTopologyEditor):
                     layout=self.base_layout
                 )
                 component_widget['component_name_widget'] = component_name_widget
+                component_widget['component_name_widget'].observe(functools.partial(self.node_dashboard_component_name_event, component=component),
+                                                                                names='value')
                 component_name_hbox = widgets.HBox([widgets.Label(value="Name: ",
                                                                   layout=Layout(width='70px',
                                                                                 min_height=self.base_min_height,
@@ -1189,14 +1204,24 @@ class GeoTopologyEditor(AbcTopologyEditor):
 
                 #Component List
                 component_model_widget = widgets.Dropdown(
-                    options=['<Choose Component Model>'] + self.get_component_widget_options_list(),
-                    value='<Choose Component Model>',
+                    options=[('<Choose Component Model>',"no model")] + self.get_component_widget_options_list(),
+                    value="no model",
                     disabled=False,
                     ensure_option=True,
                     tooltip='Choose Component Model',
                     layout=self.base_layout
                 )
+                #dashboard['component_model_widget'].observe(self.node_dashboard_select_node_event, names='value')
+                print("component: {} ".format(component))
+                component_model = self.get_component_model(type=component.type, model=component.model)
+                if component_model != None:
+                  component_model_widget.value = component_model
+
                 component_widget['component_model_widget'] = component_model_widget
+                #component_widget['component_model_widget'].observe(self.node_dashboard_component_model_event,
+                #                                                                names='value')
+                component_widget['component_model_widget'].observe(functools.partial(self.node_dashboard_component_model_event, component=component),
+                                                                                names='value')
                 component_model_hbox = widgets.HBox([widgets.Label(value="Model: ",
                                                                    layout=Layout(width='70px',
                                                                                  min_height=self.base_min_height,
@@ -1399,6 +1424,48 @@ class GeoTopologyEditor(AbcTopologyEditor):
         new_name = change['new']
 
         self.update_select_node_widget_option_name(new_name)
+
+
+    def node_dashboard_component_name_event(self, change, component):
+        """
+        Node dashboard component name event
+        :param change:
+        :return:
+        """
+        print("node_dashboard_component_name_event")
+        print(change)
+
+        # Update the name
+        old_name = change['old']
+        new_name = change['new']
+        print("node_dashboard_component_name_event: old: {}, new: {} ".format(old_name,new_name))
+        component.name = new_name
+
+    def set_component_mode(self, component, model, type):
+        component.set_property(pname="type",pval=type)
+        component.set_property(pname="model",pval=model)
+
+    def node_dashboard_component_model_event(self, change, component):
+        """
+        Node dashboard component model event
+        :param change:
+        :return:
+        """
+        print("node_dashboard_component_model_event")
+        print("change: -- {}  ".format(change))
+        print("mywidget: -- {}  ".format(component))
+
+        # Update the name
+        old_model = change['old']
+        new_model = change['new']
+        print("node_dashboard_component_model_event: old: {}, new: {} ".format(old_model,new_model))
+        #self.update_select_node_widget_option_name(new_name)
+        #node.remove_component(self, name: str)
+
+        self.set_component_mode(component, new_model['Model'], new_model['Type'])
+
+
+
 
     def save_node_widget_data(self):
         self.save_node(topology_node=self.current_node,

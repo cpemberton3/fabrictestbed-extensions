@@ -405,30 +405,42 @@ class AbcTopologyEditor(ABC):
             return_list.append(type.name)
         return return_list
 
+
+
     @staticmethod
-    def get_component_model_list(type=None):
+    def get_component_model_list(type=None, model=None):
         """
         Get component model list
         :param type:
         :return:
         """
-        if type is None:
+        print("GUI: Model: {}, Type: {}".format(model,type))
+        print("component cataloge: {}".format(ComponentCatalog.catalog_instance.copy()))
+        for c in ComponentCatalog.catalog_instance.copy():
+            print ("Model: {}, Type: {}".format(c['Model'],c['Type']))
+            if str(type) == str(c['Type']) and str(model) == str(c['Model']):
+                print("Found component model: {}".format(c))
+
+        if type is None and model is None:
             return ComponentCatalog.catalog_instance.copy()
+        elif model is None:
+            return list(filter(lambda x: str(x['Type']) == str(type), ComponentCatalog.catalog_instance.copy()))
         else:
-            return list(filter(lambda x: x['Type'] == type, ComponentCatalog.catalog_instance))
+            return list(filter(lambda x: str(x['Type']) == str(type) and str(x['Model']) == str(model), ComponentCatalog.catalog_instance.copy()))
 
     @staticmethod
-    def get_component_widget_options_list(type=None):
-        """
-        Get component widget options list
-        :param type:
-        :return:
-        """
-        return_list = []
-        for component in AbcTopologyEditor.get_component_model_list(type):
-            return_list.append(component['Model'] + " (" + component['Type'] + ")")
+    def get_component_model(type, model):
+        try:
+            clist =  AbcTopologyEditor.get_component_model_list(type=type, model=model)
+            print("clist: {}".format(clist))
+            c = clist[0]
+            print("c: {}".format(c))
 
-        return return_list
+            return c
+        except:
+            print("Component type {}, model: {} Not found.".format(type,model))
+
+        return None
 
     def get_node_name_list(self):
         """
@@ -454,20 +466,6 @@ class AbcTopologyEditor(ABC):
 
         return name
 
-    # def get_unique_component_name(self):
-    #     """
-    #     Get unique component name
-    #     :return:
-    #     """
-    #     num = 1
-    #     name = 'dev' + str(num)
-    #     while len(list(filter(lambda x: x['component_name_widget'].value == name,
-    #                           self.dashboards['node_dashboard']['components']))) > 0:
-    #         num += 1
-    #         name = 'dev' + str(num)
-    #
-    #     return name
-
     def get_unique_component_name(self, node=None):
         """
         Get unique component name
@@ -481,7 +479,7 @@ class AbcTopologyEditor(ABC):
         for component_name, component in node.components.items():
             if name == component_name:
                 num += 1
-                name = 'node' + str(num)
+                name = 'dev' + str(num)
             else:
                 break
 
